@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	b, err := os.ReadFile("input3.txt")
+	b, err := os.ReadFile("input2.txt")
 	if err != nil {
 		panic(err)
 	}
@@ -35,9 +35,9 @@ func main() {
 		"nine":  9,
 	}
 
-	lookup := func(l string, pos int) (int, bool) {
+	check := func(l string) (int, bool) {
 		for k, v := range lookups {
-			if strings.HasPrefix(l[pos:], k) {
+			if strings.HasPrefix(l, k) {
 				return v, true
 			}
 		}
@@ -54,12 +54,12 @@ func main() {
 
 	for _, l := range lines {
 		for i := 0; i < len(l); i++ {
-			if first, ok = lookup(l, i); ok {
+			if first, ok = check(l[i:]); ok {
 				break
 			}
 		}
 		for i := len(l) - 1; i >= 0; i-- {
-			if last, ok = lookup(l, i); ok {
+			if last, ok = check(l[i:]); ok {
 				break
 			}
 		}
