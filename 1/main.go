@@ -3,41 +3,68 @@ package main
 import (
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 )
 
 func main() {
-	b, err := os.ReadFile("input2.txt")
+	b, err := os.ReadFile("input3.txt")
 	if err != nil {
 		panic(err)
 	}
 
-	sum := 0
-	lines := strings.Split(string(b), "\n")
-	for _, l := range lines {
-		if len(l) == 0 {
-			continue
-		}
+	lookups := map[string]int{
+		"0":     0,
+		"1":     1,
+		"2":     2,
+		"3":     3,
+		"4":     4,
+		"5":     5,
+		"6":     6,
+		"7":     7,
+		"8":     8,
+		"9":     9,
+		"zero":  0,
+		"one":   1,
+		"two":   2,
+		"three": 3,
+		"four":  4,
+		"five":  5,
+		"six":   6,
+		"seven": 7,
+		"eight": 8,
+		"nine":  9,
+	}
 
-		var first, last string
+	lookup := func(l string, pos int) (int, bool) {
+		for k, v := range lookups {
+			if strings.HasPrefix(l[pos:], k) {
+				return v, true
+			}
+		}
+		return 0, false
+	}
+
+	var (
+		lines = strings.Split(string(b), "\n")
+		sum   int
+		first int
+		last  int
+		ok    bool
+	)
+
+	for _, l := range lines {
 		for i := 0; i < len(l); i++ {
-			if l[i] >= '0' && l[i] <= '9' {
-				first = l[i : i+1]
+			if first, ok = lookup(l, i); ok {
 				break
 			}
 		}
 		for i := len(l) - 1; i >= 0; i-- {
-			if l[i] >= '0' && l[i] <= '9' {
-				last = l[i : i+1]
+			if last, ok = lookup(l, i); ok {
 				break
 			}
 		}
-		v, err := strconv.Atoi(first + last)
-		if err != nil {
-			panic(err)
-		}
-		sum += v
+
+		sum += first*10 + last
 	}
 	fmt.Println("Total is:", sum)
 }
